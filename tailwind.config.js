@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: '#DEDBC8',
         brand: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -22,6 +23,10 @@ export default {
           emerald: '#10b981',
           amber: '#f59e0b',
         }
+      },
+      fontFamily: {
+        sans: ['Almarai', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'serif'],
       },
       animation: {
         'scan': 'scan 2.5s ease-in-out infinite',

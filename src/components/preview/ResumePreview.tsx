@@ -108,7 +108,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-950/90 relative">
+    <div className="flex flex-col h-full bg-[#0a0b0d] relative overflow-hidden">
       {/* Floating Toolbar pinned to top of preview panel */}
       <div className="p-3 sm:p-4 z-20 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
         <FloatingToolbar
@@ -126,18 +126,30 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
       </div>
 
       {/* Interactive A4 Document Canvas Area */}
-      <div className="flex-1 overflow-auto p-4 sm:p-8 flex justify-center items-start bg-neutral-900/50 print:bg-white print:p-0">
+      <div className="flex-1 overflow-auto p-4 sm:p-8 flex justify-center items-start print:bg-white print:p-0 bg-neutral-950/80 relative">
+        {/* Subtle document stage grid backdrop */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20 print:hidden"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0)`,
+            backgroundSize: '24px 24px'
+          }}
+        />
+
         <div
           style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'top center' }}
-          className="transition-transform duration-150 ease-out"
+          className="transition-transform duration-150 ease-out z-10 my-4"
         >
           {/* Real A4 Sheet Aspect Ratio Container (210mm x 297mm) */}
           <div
             ref={printRef}
             id="printable-resume-sheet"
-            className={`w-[210mm] min-h-[297mm] bg-white text-zinc-900 shadow-2xl rounded-sm transition-all duration-200 overflow-hidden ${getFontFamilyClass()} ${getDensityClass()} ${
+            className={`w-[210mm] min-h-[297mm] bg-white text-zinc-900 rounded-sm transition-all duration-200 overflow-hidden ${getFontFamilyClass()} ${getDensityClass()} ${
               highlightKeywords ? 'ats-highlight-mode' : ''
             } print:shadow-none print:m-0 print:w-full print:min-h-0`}
+            style={{
+              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255,255,255,0.06)'
+            }}
           >
             {renderTemplate()}
           </div>
