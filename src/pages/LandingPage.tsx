@@ -46,13 +46,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <span className="text-[#E1E0CC] font-bold tracking-tight text-xl">
-                  ResuMate<span className="text-primary">*</span>
+                  Prisma<span className="text-primary">.</span>
                 </span>
                 <span className="text-gray-600">/</span>
-                <span className="text-xs text-gray-400 font-medium">ATS Resume & Career Studio</span>
+                <span className="text-xs text-gray-400 font-medium">Resume & Career Studio</span>
               </div>
               <p className="text-xs text-gray-500 max-w-md leading-relaxed">
-                Engineered for ambitious candidates to bypass automated screening filters, optimize keyword frequency, and generate interview-winning executive resumes.
+                An intelligent resume studio and career engine for ambitious professionals who refuse to settle for generic templates and broken formatting.
               </p>
             </div>
 
@@ -185,7 +185,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Bottom Row: Legal & Rights */}
           <div className="pt-8 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-gray-600 font-mono">
             <div>
-              © {new Date().getFullYear()} ResuMate AI. Built for candidates who refuse to settle.
+              © {new Date().getFullYear()} Prisma Studio. Built for candidates who refuse to settle.
             </div>
             <div className="flex items-center gap-4">
               <a href="#about" className="hover:text-gray-400 transition-colors">Philosophy</a>

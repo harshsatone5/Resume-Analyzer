@@ -19,7 +19,7 @@ export const PrismaAbout: React.FC = () => {
   ];
 
   const bioText =
-    'Over 75% of resumes are eliminated by Applicant Tracking Systems before a hiring manager ever sees them. We built ResuMate to reverse that dynamic—combining parse-proof formatting with high-impact typography to ensure your achievements command attention at top tech, finance, and creative firms.';
+    'Over 75% of resumes are eliminated by Applicant Tracking Systems before a hiring manager ever sees them. We built Prisma to reverse that dynamic—combining parse-proof formatting with high-impact typography to ensure your achievements command attention at top tech, finance, and creative firms.';
 
   return (
     <section id="about" className="bg-black py-20 sm:py-28 md:py-36 px-4 sm:px-6 md:px-8 w-full flex justify-center">

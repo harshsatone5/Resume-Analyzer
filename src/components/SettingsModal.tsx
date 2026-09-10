@@ -11,12 +11,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onKeySave
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    const existing = localStorage.getItem('RESUMATE_GEMINI_KEY') || '';
+    const existing = localStorage.getItem('PRISMA_GEMINI_KEY') || '';
     setApiKey(existing);
   }, []);
 
   const handleSave = () => {
-    localStorage.setItem('RESUMATE_GEMINI_KEY', apiKey.trim());
+    localStorage.setItem('PRISMA_GEMINI_KEY', apiKey.trim());
     onKeySaved(apiKey.trim());
     setSaved(true);
     setTimeout(() => {
@@ -26,7 +26,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onKeySave
   };
 
   const handleClear = () => {
-    localStorage.removeItem('RESUMATE_GEMINI_KEY');
+    localStorage.removeItem('PRISMA_GEMINI_KEY');
     setApiKey('');
     onKeySaved('');
   };

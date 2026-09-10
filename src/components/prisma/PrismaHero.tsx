@@ -78,12 +78,12 @@ export const PrismaHero: React.FC<PrismaHeroProps> = ({ onJoinClick, onNavigate 
         {/* Hero Content (bottom-aligned) */}
         <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-10 lg:p-12 z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end">
-            {/* Left 8 columns: Giant Heading "ResuMate" */}
+            {/* Left 8 columns: Giant Heading "Prisma" */}
             <div className="lg:col-span-8 flex items-baseline">
               <h1 className="text-[20vw] sm:text-[18vw] md:text-[16vw] lg:text-[15vw] xl:text-[14vw] 2xl:text-[14.5vw] font-medium leading-[0.85] tracking-[-0.07em] select-none text-[#E1E0CC]">
                 <WordsPullUp
-                  text="ResuMate"
-                  showAsterisk={true}
+                  text="Prisma"
+                  showAsterisk={false}
                   className="text-[#E1E0CC]"
                 />
               </h1>

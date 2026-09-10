@@ -9,8 +9,8 @@ import { ToastContainer, type ToastMessage } from './components/ui/Toast';
 import type { ResumeData, ResumeTheme, TemplateType } from './types/resume';
 import { sampleResume, emptyResume } from './data/sampleResumes';
 
-const STORAGE_KEY_DATA = 'RESUMATE_BUILDER_DATA_V1';
-const STORAGE_KEY_THEME = 'RESUMATE_BUILDER_THEME_V1';
+const STORAGE_KEY_DATA = 'PRISMA_BUILDER_DATA_V1';
+const STORAGE_KEY_THEME = 'PRISMA_BUILDER_THEME_V1';
 
 const defaultTheme: ResumeTheme = {
   template: 'modern',

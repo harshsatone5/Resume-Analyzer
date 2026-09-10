@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Target,
   FileText,
@@ -8,9 +9,8 @@ import {
   Zap,
   RotateCcw,
   Check,
-  ShieldCheck,
-  TrendingUp,
-  Cpu
+  Cpu,
+  Search
 } from 'lucide-react';
 import { sampleResume } from '../data/sampleResumes';
 import { analyzeAtsMatch } from '../services/atsOptimizer';
@@ -47,11 +47,6 @@ export const AnalyzerPage: React.FC<AnalyzerPageProps> = ({ onOpenInStudio }) =>
     );
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
-    if (score >= 50) return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
-    return 'text-rose-400 border-rose-500/30 bg-rose-500/10';
-  };
 
   const getScoreGradient = (score: number) => {
     if (score >= 80) return 'from-emerald-500 to-teal-400';
@@ -59,266 +54,394 @@ export const AnalyzerPage: React.FC<AnalyzerPageProps> = ({ onOpenInStudio }) =>
     return 'from-rose-500 to-pink-500';
   };
 
+  const scoreArc = (score: number) => {
+    const circumference = 2 * Math.PI * 44;
+    const offset = circumference - (score / 100) * circumference;
+    return { circumference, offset };
+  };
+
+  const { circumference, offset } = scoreArc(analysis.matchScore);
+
   return (
-    <div className="w-full min-h-[calc(100vh-3.5rem)] py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto selection:bg-[#DEDBC8]/20 selection:text-[#DEDBC8]">
-      {/* Editorial Header */}
-      <div className="text-center max-w-2xl mx-auto mb-12 animate-fade-in">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium mb-4"
-             style={{ background: 'var(--surface-elevated)', border: '1px solid var(--border-subtle)' }}>
-          <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-          <span className="text-zinc-300">Parse-Proof ATS Engine</span>
-          <span className="text-zinc-600">•</span>
-          <span className="text-zinc-400">Keyword & Formatting Audit</span>
-        </div>
+    <div className="w-full min-h-[calc(100vh-3.5rem)] relative overflow-hidden">
+      {/* Background noise texture */}
+      <div className="bg-noise absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none z-0" />
 
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
-          Beat the Recruiter Filter.
-        </h1>
-        <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-xl mx-auto">
-          75% of resumes are discarded by Applicant Tracking Systems before a human ever reads them.
-          Compare your draft against the job requirements in seconds.
-        </p>
-      </div>
+      {/* Ambient glow accents */}
+      <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-[#DEDBC8]/[0.02] rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#DEDBC8]/[0.015] rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Input Panes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Left: Resume Text */}
-        <div className="glass-card p-6 flex flex-col justify-between space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
-            <label className="text-xs font-semibold text-zinc-200 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-primary" />
-              <span>Your Resume Content</span>
-            </label>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleLoadSample}
-                className="text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors flex items-center gap-1"
-                title="Populate with sample text"
-              >
-                <RotateCcw className="w-3 h-3" /> Load Sample
-              </button>
-              <span className="text-[11px] font-mono text-zinc-500 tabular-nums">
-                {resumeText.split(/\s+/).filter(Boolean).length} words
+      <div className="relative z-10 py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Editorial Header */}
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-2xl mx-auto mb-14"
+        >
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium mb-6"
+            style={{
+              background: 'rgba(222, 219, 200, 0.04)',
+              border: '1px solid rgba(222, 219, 200, 0.08)',
+              backdropFilter: 'blur(8px)'
+            }}
+          >
+            <Search className="w-3.5 h-3.5 text-[#DEDBC8]" />
+            <span className="text-[#DEDBC8]/80">Parse-Proof ATS Engine</span>
+            <span className="text-[#DEDBC8]/20">·</span>
+            <span className="text-[#DEDBC8]/50">Keyword & Formatting Audit</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-bold tracking-[-0.03em] text-[#E1E0CC] mb-5 leading-[1.1]">
+            Beat the recruiter filter.
+          </h1>
+          <p className="text-sm sm:text-[15px] text-[#DEDBC8]/50 leading-relaxed max-w-lg mx-auto">
+            75% of resumes are discarded by Applicant Tracking Systems before a human reads them. Compare your draft against job requirements in seconds.
+          </p>
+        </motion.div>
+
+        {/* Input Panes */}
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-10"
+        >
+          {/* Left: Resume Text */}
+          <div
+            className="rounded-2xl p-6 flex flex-col justify-between space-y-4 transition-all duration-300"
+            style={{
+              background: '#101010',
+              border: '1px solid rgba(255, 255, 255, 0.04)',
+            }}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.05]">
+              <label className="text-xs font-semibold text-[#E1E0CC] flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-[#DEDBC8]/[0.06] flex items-center justify-center">
+                  <FileText className="w-3.5 h-3.5 text-[#DEDBC8]" />
+                </div>
+                <span>Your resume content</span>
+              </label>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleLoadSample}
+                  className="text-[11px] text-[#DEDBC8]/40 hover:text-[#DEDBC8]/80 transition-colors flex items-center gap-1.5"
+                  title="Populate with sample text"
+                >
+                  <RotateCcw className="w-3 h-3" /> Load sample
+                </button>
+                <span className="text-[11px] font-mono text-[#DEDBC8]/25 tabular-nums">
+                  {resumeText.split(/\s+/).filter(Boolean).length} words
+                </span>
+              </div>
+            </div>
+
+            <textarea
+              rows={10}
+              value={resumeText}
+              onChange={(e) => setResumeText(e.target.value)}
+              placeholder="Paste your resume markdown, plain text, or summary here..."
+              className="w-full px-4 py-3 text-[13px] rounded-xl text-[#E1E0CC]/90 placeholder-[#DEDBC8]/15 focus:outline-none font-mono leading-relaxed resize-y transition-all duration-200"
+              style={{
+                background: 'rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(222, 219, 200, 0.15)'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.04)'; }}
+            />
+
+            <div className="text-[11px] text-[#DEDBC8]/25 flex items-center justify-between">
+              <span>Includes experience, education & skills sections</span>
+              <span className="text-emerald-400/70 flex items-center gap-1 font-medium">
+                <Check className="w-3 h-3" /> Ready
               </span>
             </div>
           </div>
 
-          <textarea
-            rows={10}
-            value={resumeText}
-            onChange={(e) => setResumeText(e.target.value)}
-            placeholder="Paste your resume markdown, plain text, or summary here..."
-            className="w-full px-4 py-3 text-xs bg-zinc-950/70 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-primary/80 font-mono leading-relaxed resize-y transition-all"
-          />
+          {/* Right: Job Description */}
+          <div
+            className="rounded-2xl p-6 flex flex-col justify-between space-y-4 transition-all duration-300"
+            style={{
+              background: '#101010',
+              border: '1px solid rgba(255, 255, 255, 0.04)',
+            }}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.05]">
+              <label className="text-xs font-semibold text-[#E1E0CC] flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/[0.08] flex items-center justify-center">
+                  <Target className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+                <span>Target job description</span>
+              </label>
+              <span className="text-[11px] font-mono text-[#DEDBC8]/25 tabular-nums">
+                {jobDescription.split(/\s+/).filter(Boolean).length} words
+              </span>
+            </div>
 
-          <div className="text-[11px] text-zinc-500 flex items-center justify-between">
-            <span>Includes experience, education & skills sections</span>
-            <span className="text-emerald-400 flex items-center gap-1 font-medium">
-              <Check className="w-3 h-3" /> Ready to parse
-            </span>
+            <textarea
+              rows={10}
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              placeholder="Paste the job opening requirements, responsibilities, or LinkedIn post..."
+              className="w-full px-4 py-3 text-[13px] rounded-xl text-[#E1E0CC]/90 placeholder-[#DEDBC8]/15 focus:outline-none font-mono leading-relaxed resize-y transition-all duration-200"
+              style={{
+                background: 'rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(222, 219, 200, 0.15)'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.04)'; }}
+            />
+
+            <div className="text-[11px] text-[#DEDBC8]/25 flex items-center justify-between">
+              <span>Identifies hard skills, tech stacks, and domain terms</span>
+              <span className="text-[#DEDBC8]/30">Real-time keyword extractor</span>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right: Job Description */}
-        <div className="glass-card p-6 flex flex-col justify-between space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
-            <label className="text-xs font-semibold text-zinc-200 flex items-center gap-2">
-              <Target className="w-4 h-4 text-emerald-400" />
-              <span>Target Job Description</span>
-            </label>
-            <span className="text-[11px] font-mono text-zinc-500 tabular-nums">
-              {jobDescription.split(/\s+/).filter(Boolean).length} words
-            </span>
-          </div>
-
-          <textarea
-            rows={10}
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Paste the job opening requirements, responsibilities, or LinkedIn post..."
-            className="w-full px-4 py-3 text-xs bg-zinc-950/70 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-primary/80 font-mono leading-relaxed resize-y transition-all"
-          />
-
-          <div className="text-[11px] text-zinc-500 flex items-center justify-between">
-            <span>Identifies hard skills, tech stacks, and domain terms</span>
-            <span className="text-zinc-400">Real-time keyword extractor</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Scan Button */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-        <button
-          onClick={handleRunScan}
-          disabled={isScanning || !resumeText.trim()}
-          className="btn-primary text-sm px-8 py-3.5 font-bold shadow-xl shadow-black/40 disabled:opacity-50"
+        {/* Action Scan Button */}
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center justify-center gap-3 mb-14"
         >
-          {isScanning ? (
-            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <Cpu className="w-4 h-4" />
-          )}
-          <span>{isScanning ? 'Parsing Keywords & Formatting...' : 'Run Comprehensive ATS Audit'}</span>
-        </button>
-      </div>
+          <button
+            onClick={handleRunScan}
+            disabled={isScanning || !resumeText.trim()}
+            className="group inline-flex items-center gap-2.5 hover:gap-3 bg-[#DEDBC8] text-black font-semibold text-sm rounded-full pl-6 pr-2 py-2 transition-all duration-300 shadow-[0_4px_20px_rgba(222,219,200,0.2)] hover:shadow-[0_8px_32px_rgba(222,219,200,0.3)] active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none"
+          >
+            <span>{isScanning ? 'Parsing keywords & formatting...' : 'Run comprehensive ATS audit'}</span>
+            <span className="bg-black rounded-full w-9 h-9 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 flex-shrink-0">
+              {isScanning ? (
+                <div className="w-4 h-4 border-2 border-[#DEDBC8] border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Cpu className="w-4 h-4 text-[#DEDBC8]" />
+              )}
+            </span>
+          </button>
+          <span className="text-[11px] text-[#DEDBC8]/20 font-mono">
+            Scans keyword density, formatting compliance, and section coverage
+          </span>
+        </motion.div>
 
-      {/* Results Dashboard */}
-      {hasScanned && (
-        <div className="glass-card p-6 sm:p-8 lg:p-10 space-y-8 animate-fade-in shadow-2xl relative overflow-hidden">
-          {/* Subtle Ambient Glow */}
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/[0.03] rounded-full blur-3xl pointer-events-none" />
+        {/* Results Dashboard */}
+        <AnimatePresence>
+          {hasScanned && (
+            <motion.div
+              initial={{ y: 40, opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="rounded-[1.5rem] overflow-hidden relative"
+              style={{
+                background: '#0a0a0a',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+            >
+              {/* Ambient glow within card */}
+              <div className="absolute top-0 right-1/4 w-80 h-80 bg-[#DEDBC8]/[0.02] rounded-full blur-[100px] pointer-events-none" />
 
-          {/* Header Score Row */}
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-zinc-800">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-widest text-zinc-400 font-bold">Audit Results</span>
-                <span className="text-zinc-600">•</span>
-                <span className="text-xs text-emerald-400 font-medium">Scored against ATS benchmark</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                Target Role: {analysis.jobTitle}
-              </h2>
-              <p className="text-xs text-zinc-400">
-                Your resume satisfies the baseline keyword frequency for enterprise ATS software.
-              </p>
-            </div>
-
-            {/* Score Badge & CTA */}
-            <div className="flex items-center gap-4 self-stretch sm:self-auto justify-between sm:justify-end">
-              <div className="flex items-center gap-3 px-5 py-3 rounded-2xl border bg-zinc-900/90 border-zinc-800">
-                <div className="text-right">
-                  <div className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">ATS Score</div>
-                  <div className={`text-2xl font-black font-mono leading-none bg-clip-text text-transparent bg-gradient-to-r ${getScoreGradient(analysis.matchScore)}`}>
-                    {analysis.matchScore}%
+              <div className="p-6 sm:p-8 lg:p-10 space-y-8 relative z-10">
+                {/* Header Score Row */}
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 pb-8 border-b border-white/[0.05]">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[10px] uppercase tracking-[0.15em] text-[#DEDBC8]/40 font-semibold">Audit results</span>
+                      <span className="w-1 h-1 rounded-full bg-[#DEDBC8]/15" />
+                      <span className="text-[10px] text-emerald-400/70 font-medium">Scored against ATS benchmark</span>
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-[#E1E0CC] tracking-[-0.02em]">
+                      {analysis.jobTitle}
+                    </h2>
+                    <p className="text-[13px] text-[#DEDBC8]/35 leading-relaxed max-w-lg">
+                      Your resume satisfies the baseline keyword frequency for enterprise ATS software. See matched and missing signals below.
+                    </p>
                   </div>
-                </div>
-                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center font-mono font-bold text-sm ${getScoreColor(analysis.matchScore)}`}>
-                  <TrendingUp className="w-5 h-5" />
-                </div>
-              </div>
 
-              <button
-                onClick={() => onOpenInStudio(sampleResume)}
-                className="btn-primary text-xs py-3 px-5 font-semibold flex items-center gap-2 whitespace-nowrap"
-              >
-                <span>Edit in Studio</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
+                  {/* Circular Score Gauge + CTA */}
+                  <div className="flex items-center gap-5 self-stretch sm:self-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-4 px-5 py-4 rounded-2xl" style={{ background: '#101010', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      {/* SVG circular gauge */}
+                      <div className="relative w-16 h-16">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="6" />
+                          <circle
+                            cx="50" cy="50" r="44" fill="none"
+                            stroke={analysis.matchScore >= 80 ? '#34d399' : analysis.matchScore >= 50 ? '#fbbf24' : '#f87171'}
+                            strokeWidth="6"
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={offset}
+                            className="transition-all duration-1000 ease-out"
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className={`text-lg font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r ${getScoreGradient(analysis.matchScore)}`}>
+                            {analysis.matchScore}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[10px] uppercase font-semibold text-[#DEDBC8]/30 tracking-wider">ATS Score</div>
+                        <div className="text-[11px] text-[#DEDBC8]/50 mt-0.5">
+                          {analysis.matchScore >= 80 ? 'Strong pass' : analysis.matchScore >= 50 ? 'Needs work' : 'At risk'}
+                        </div>
+                      </div>
+                    </div>
 
-          {/* Filter Pills */}
-          <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-4">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                activeTab === 'all'
-                  ? 'bg-zinc-800 text-white shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              All Signals ({analysis.matchedKeywords.length + analysis.missingKeywords.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('matched')}
-              className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                activeTab === 'matched'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              Matched ({analysis.matchedKeywords.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('missing')}
-              className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                activeTab === 'missing'
-                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              Missing Terms ({analysis.missingKeywords.length})
-            </button>
-          </div>
-
-          {/* Grid: Matched & Missing Keywords */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Matched Keywords */}
-            {(activeTab === 'all' || activeTab === 'matched') && (
-              <div className="p-5 rounded-2xl bg-zinc-950/60 border border-emerald-500/20 space-y-3">
-                <div className="text-xs font-bold text-emerald-400 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Found in Resume ({analysis.matchedKeywords.length})</span>
-                  </div>
-                  <span className="text-[10px] text-emerald-500/80 font-mono">100% Parsed</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {analysis.matchedKeywords.map((kw) => (
-                    <span
-                      key={kw}
-                      className="px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 rounded-lg flex items-center gap-1.5 transition-transform hover:scale-105"
+                    <button
+                      onClick={() => onOpenInStudio(sampleResume)}
+                      className="group inline-flex items-center gap-2 bg-[#DEDBC8] text-black text-xs font-semibold py-3 px-5 rounded-full transition-all duration-300 hover:shadow-[0_4px_20px_rgba(222,219,200,0.2)] active:scale-[0.97] whitespace-nowrap"
                     >
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span>{kw}</span>
-                    </span>
+                      <span>Edit in Studio</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filter Pills */}
+                <div className="flex items-center gap-1.5 pb-5 border-b border-white/[0.04]">
+                  {[
+                    { key: 'all' as const, label: `All signals`, count: analysis.matchedKeywords.length + analysis.missingKeywords.length },
+                    { key: 'matched' as const, label: 'Matched', count: analysis.matchedKeywords.length },
+                    { key: 'missing' as const, label: 'Missing', count: analysis.missingKeywords.length }
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className="px-3.5 py-1.5 text-xs font-medium rounded-full transition-all duration-200"
+                      style={{
+                        color: activeTab === tab.key ? '#000' : 'rgba(222, 219, 200, 0.4)',
+                        background: activeTab === tab.key ? '#DEDBC8' : 'transparent',
+                        border: activeTab === tab.key ? 'none' : '1px solid rgba(255,255,255,0.05)',
+                      }}
+                    >
+                      {tab.label} <span className="opacity-60 ml-0.5">({tab.count})</span>
+                    </button>
                   ))}
                 </div>
-              </div>
-            )}
 
-            {/* Missing Keywords */}
-            {(activeTab === 'all' || activeTab === 'missing') && (
-              <div className="p-5 rounded-2xl bg-zinc-950/60 border border-rose-500/20 space-y-3">
-                <div className="text-xs font-bold text-rose-400 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Missing High-Priority Terms ({analysis.missingKeywords.length})</span>
-                  </div>
-                  <span className="text-[10px] text-rose-400/80 font-mono">Add to Pass Filter</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {analysis.missingKeywords.map((kw) => (
-                    <span
-                      key={kw}
-                      className="px-3 py-1 text-xs font-medium bg-rose-500/10 text-rose-300 border border-rose-500/20 rounded-lg flex items-center gap-1.5 transition-transform hover:scale-105"
+                {/* Grid: Matched & Missing Keywords */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Matched Keywords */}
+                  {(activeTab === 'all' || activeTab === 'matched') && (
+                    <div
+                      className="p-5 rounded-2xl space-y-3.5"
+                      style={{
+                        background: 'rgba(16, 185, 129, 0.03)',
+                        border: '1px solid rgba(16, 185, 129, 0.08)',
+                      }}
                     >
-                      <span className="text-rose-400 font-bold">+</span>
-                      <span>{kw}</span>
-                    </span>
-                  ))}
+                      <div className="text-xs font-semibold text-emerald-400/80 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Found in resume ({analysis.matchedKeywords.length})</span>
+                        </div>
+                        <span className="text-[10px] text-emerald-500/40 font-mono">100% parsed</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {analysis.matchedKeywords.map((kw) => (
+                          <span
+                            key={kw}
+                            className="px-2.5 py-1 text-[11px] font-medium text-emerald-300/80 rounded-lg flex items-center gap-1.5 transition-colors hover:text-emerald-200"
+                            style={{
+                              background: 'rgba(16, 185, 129, 0.06)',
+                              border: '1px solid rgba(16, 185, 129, 0.1)',
+                            }}
+                          >
+                            <Check className="w-2.5 h-2.5 text-emerald-400/60" />
+                            <span>{kw}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Missing Keywords */}
+                  {(activeTab === 'all' || activeTab === 'missing') && (
+                    <div
+                      className="p-5 rounded-2xl space-y-3.5"
+                      style={{
+                        background: 'rgba(244, 63, 94, 0.03)',
+                        border: '1px solid rgba(244, 63, 94, 0.08)',
+                      }}
+                    >
+                      <div className="text-xs font-semibold text-rose-400/80 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          <span>Missing high-priority terms ({analysis.missingKeywords.length})</span>
+                        </div>
+                        <span className="text-[10px] text-rose-400/40 font-mono">Add to pass</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {analysis.missingKeywords.map((kw) => (
+                          <span
+                            key={kw}
+                            className="px-2.5 py-1 text-[11px] font-medium text-rose-300/80 rounded-lg flex items-center gap-1.5 transition-colors hover:text-rose-200"
+                            style={{
+                              background: 'rgba(244, 63, 94, 0.06)',
+                              border: '1px solid rgba(244, 63, 94, 0.1)',
+                            }}
+                          >
+                            <span className="text-rose-400/60 font-bold text-[10px]">+</span>
+                            <span>{kw}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-          </div>
 
-          {/* Actionable Recommendations Box */}
-          <div className="p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="text-xs font-bold text-zinc-200 flex items-center gap-2">
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span>Immediate Optimizations to Boost Your ATS Score</span>
-              </div>
-              <span className="text-[11px] text-zinc-500">Auto-generated checklist</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              {analysis.recommendations.map((rec, i) => (
+                {/* Recommendations */}
                 <div
-                  key={i}
-                  className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800/80 flex items-start gap-2.5 text-zinc-300 hover:border-zinc-700 transition-colors"
+                  className="p-6 rounded-2xl space-y-5"
+                  style={{
+                    background: '#0d0d0d',
+                    border: '1px solid rgba(255, 255, 255, 0.04)',
+                  }}
                 >
-                  <span className="w-5 h-5 rounded-md bg-primary/15 text-primary flex items-center justify-center font-bold text-[11px] flex-shrink-0 mt-0.5">
-                    {i + 1}
-                  </span>
-                  <span className="leading-relaxed">{rec}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs font-semibold text-[#E1E0CC] flex items-center gap-2.5">
+                      <div className="w-6 h-6 rounded-md bg-amber-500/[0.08] flex items-center justify-center">
+                        <Zap className="w-3 h-3 text-amber-400/80" />
+                      </div>
+                      <span>Optimizations to boost your score</span>
+                    </div>
+                    <span className="text-[10px] text-[#DEDBC8]/20 font-mono">Auto-generated</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {analysis.recommendations.map((rec, i) => (
+                      <div
+                        key={i}
+                        className="p-3.5 rounded-xl flex items-start gap-3 text-[#DEDBC8]/60 transition-colors duration-200"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.015)',
+                          border: '1px solid rgba(255, 255, 255, 0.03)',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(222, 219, 200, 0.08)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.03)'; }}
+                      >
+                        <span
+                          className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5"
+                          style={{
+                            background: 'rgba(222, 219, 200, 0.06)',
+                            color: 'rgba(222, 219, 200, 0.5)',
+                          }}
+                        >
+                          {i + 1}
+                        </span>
+                        <span className="text-xs leading-relaxed">{rec}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

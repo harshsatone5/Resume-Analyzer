@@ -104,7 +104,7 @@ export const ScannerOverlay: React.FC<ScannerOverlayProps> = ({ onComplete }) =>
         <div className="mt-5 pt-3 flex items-center justify-between text-[11px]" style={{ borderTop: '1px solid var(--stitch-border)', color: 'var(--stitch-text-dim)' }}>
           <span className="flex items-center gap-1.5">
             <Terminal className="w-3 h-3" />
-            <span>ResuMate Engine</span>
+            <span>Prisma Engine</span>
           </span>
           <span style={{ color: 'var(--stitch-green)' }}>Running in-browser</span>
         </div>

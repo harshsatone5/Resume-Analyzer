@@ -98,16 +98,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   boxShadow: '0 2px 8px rgba(222, 219, 200, 0.2)'
                 }}
               >
-                <span className="text-black text-sm font-bold tracking-tight">R</span>
+                <span className="text-black text-sm font-bold tracking-tight">P</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-sm tracking-tight text-[#E1E0CC]">
-                  ResuMate<span className="text-primary">*</span>
+                  Prisma<span className="text-primary">.</span>
                 </span>
                 <span
                   className="text-[9px] font-medium tracking-wider uppercase hidden sm:block text-gray-500"
                 >
-                  ATS Resume Studio
+                  Resume & Career Studio
                 </span>
               </div>
             </div>

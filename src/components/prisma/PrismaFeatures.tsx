@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, ShieldCheck } from 'lucide-react';
 import { WordsPullUpMultiStyle, type StyleSegment } from '../animations/WordsPullUpMultiStyle';
 
 interface FeatureCardProps {
@@ -65,13 +65,15 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
   const card3Items = [
     'Pixel-perfect real-time A4 live document canvas',
     'Dynamic typography, density & color harmony scaling',
-    '100% crisp vector PDF export with zero artifacting'
+    '100% crisp vector PDF export with zero artifacting',
+    'Instant sample population & JSON backup'
   ];
 
   const card4Items = [
     'Google XYZ formula metric & impact booster',
     'Action-verb punch & conciseness optimizer',
-    'Executive tone refinement for top-tier roles'
+    'Executive tone refinement for top-tier roles',
+    'Real-time before/after suggestion comparison'
   ];
 
   return (
@@ -92,34 +94,48 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
 
         {/* 4-Column Card Grid (lg:h-[480px], gap-3 sm:gap-2 md:gap-1) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-2 md:gap-1 lg:h-[480px]">
-          {/* Card 1 - Video Card */}
-          <FeatureCardWrapper index={0} className="relative h-[420px] lg:h-full group">
-            <video
-              src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
+          {/* Card 1 - Resume Canvas Visual Card */}
+          <FeatureCardWrapper index={0} className="relative h-[420px] lg:h-full group overflow-hidden border border-white/[0.06] shadow-xl">
+            <img
+              src="/resume_canvas_card.jpg"
+              alt="Executive Resume Canvas with ATS verification scan"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
+            {/* Animated Laser Scanning Beam */}
+            <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#DEDBC8]/60 to-transparent shadow-[0_0_15px_#DEDBC8] animate-scan pointer-events-none" />
+            
+            {/* Noise overlay */}
+            <div className="noise-overlay absolute inset-0 w-full h-full opacity-40 mix-blend-overlay pointer-events-none" />
+
             {/* Dark gradient overlay for text legibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
-            <div className="absolute bottom-6 left-6 right-6 z-10">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20 pointer-events-none" />
+
+            <div className="absolute top-5 left-5 z-10">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-black/60 backdrop-blur-md text-[#DEDBC8] border border-white/10">
+                <ShieldCheck className="w-3 h-3 text-[#DEDBC8]" />
+                <span>ATS Verified Engine</span>
+              </span>
+            </div>
+
+            <div className="absolute bottom-6 left-6 right-6 z-10 space-y-1">
               <h3 className="text-lg sm:text-xl font-medium tracking-tight text-[#E1E0CC]">
                 Your career canvas.
               </h3>
+              <p className="text-xs text-gray-400">
+                Precision-engineered for top-tier hiring pipelines.
+              </p>
             </div>
           </FeatureCardWrapper>
 
           {/* Card 2 - "ATS Keyword Matcher." (01) */}
-          <FeatureCardWrapper index={1} className="bg-[#212121] p-6 sm:p-7 flex flex-col justify-between h-[420px] lg:h-full border border-white/[0.04] shadow-xl">
-            <div className="space-y-5">
-              {/* Top: Image Icon & Number */}
+          <FeatureCardWrapper index={1} className="bg-[#212121] p-6 sm:p-7 flex flex-col justify-between h-[420px] lg:h-full border border-white/[0.05] shadow-xl">
+            <div className="space-y-4">
+              {/* Top: Custom ATS Scanner Icon & Number */}
               <div className="flex items-center justify-between">
                 <img
-                  src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171918_4a5edc79-d78f-4637-ac8b-53c43c220606.png&w=1280&q=85"
-                  alt="ATS Scanner Icon"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
+                  src="/ats_scanner_icon.jpg"
+                  alt="ATS Scanner Radar Icon"
+                  className="w-11 h-11 rounded-xl object-cover border border-white/10 shadow-md"
                 />
                 <span className="text-gray-500 font-mono text-xs tracking-wider">01</span>
               </div>
@@ -130,7 +146,7 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
               </h3>
 
               {/* Checklist Items */}
-              <ul className="space-y-2.5 pt-1">
+              <ul className="space-y-2 pt-1">
                 {card2Items.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-400 leading-snug">
                     <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
@@ -154,14 +170,14 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
           </FeatureCardWrapper>
 
           {/* Card 3 - "Live Vector Studio." (02) */}
-          <FeatureCardWrapper index={2} className="bg-[#212121] p-6 sm:p-7 flex flex-col justify-between h-[420px] lg:h-full border border-white/[0.04] shadow-xl">
-            <div className="space-y-5">
-              {/* Top: Image Icon & Number */}
+          <FeatureCardWrapper index={2} className="bg-[#212121] p-6 sm:p-7 flex flex-col justify-between h-[420px] lg:h-full border border-white/[0.05] shadow-xl">
+            <div className="space-y-4">
+              {/* Top: Custom Vector Studio Icon & Number */}
               <div className="flex items-center justify-between">
                 <img
-                  src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171741_ed9845ab-f5b2-4018-8ce7-07cc01823522.png&w=1280&q=85"
-                  alt="Live Studio Icon"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
+                  src="/vector_studio_icon.jpg"
+                  alt="Live Vector Studio Icon"
+                  className="w-11 h-11 rounded-xl object-cover border border-white/10 shadow-md"
                 />
                 <span className="text-gray-500 font-mono text-xs tracking-wider">02</span>
               </div>
@@ -172,7 +188,7 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
               </h3>
 
               {/* Checklist Items */}
-              <ul className="space-y-2.5 pt-1">
+              <ul className="space-y-2 pt-1">
                 {card3Items.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-400 leading-snug">
                     <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
@@ -196,14 +212,14 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
           </FeatureCardWrapper>
 
           {/* Card 4 - "AI Bullet Polish." (03) */}
-          <FeatureCardWrapper index={3} className="bg-[#212121] p-6 sm:p-7 flex flex-col justify-between h-[420px] lg:h-full border border-white/[0.04] shadow-xl">
-            <div className="space-y-5">
-              {/* Top: Image Icon & Number */}
+          <FeatureCardWrapper index={3} className="bg-[#212121] p-6 sm:p-7 flex flex-col justify-between h-[420px] lg:h-full border border-white/[0.05] shadow-xl">
+            <div className="space-y-4">
+              {/* Top: Custom AI Bullet Polish Stylus Icon & Number */}
               <div className="flex items-center justify-between">
                 <img
-                  src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171809_f56666dc-c099-4778-ad82-9ad4f209567b.png&w=1280&q=85"
-                  alt="AI Bullet Polish Icon"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
+                  src="/ai_bullet_icon.jpg"
+                  alt="AI Bullet Polish Stylus Icon"
+                  className="w-11 h-11 rounded-xl object-cover border border-white/10 shadow-md"
                 />
                 <span className="text-gray-500 font-mono text-xs tracking-wider">03</span>
               </div>
@@ -214,7 +230,7 @@ export const PrismaFeatures: React.FC<PrismaFeaturesProps> = ({
               </h3>
 
               {/* Checklist Items */}
-              <ul className="space-y-2.5 pt-1">
+              <ul className="space-y-2 pt-1">
                 {card4Items.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-gray-400 leading-snug">
                     <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />

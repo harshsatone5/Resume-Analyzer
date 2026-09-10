@@ -5,7 +5,7 @@ export async function rewriteBulletPointAI(
   tone: RewriteTone = 'datadriven',
   apiKey?: string
 ): Promise<string> {
-  const activeKey = apiKey || localStorage.getItem('RESUMATE_GEMINI_KEY') || '';
+  const activeKey = apiKey || localStorage.getItem('PRISMA_GEMINI_KEY') || '';
 
   if (activeKey.trim()) {
     try {
@@ -61,7 +61,7 @@ export async function generateCustomCoachingAI(
   targetRole: string,
   apiKey?: string
 ): Promise<string> {
-  const activeKey = apiKey || localStorage.getItem('RESUMATE_GEMINI_KEY') || '';
+  const activeKey = apiKey || localStorage.getItem('PRISMA_GEMINI_KEY') || '';
 
   if (activeKey.trim()) {
     try {
